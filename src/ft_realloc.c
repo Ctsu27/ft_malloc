@@ -62,7 +62,7 @@ void	*realloc(void *ptr, size_t size)
 	else if (kind == SMALL)
 		n_cpy = SMALL_SIZE;
 	else
-		n_cpy = get_map_size_by_ptr_and_kind((const void *)p, (const int)kind)
+		n_cpy = get_map_size_by_ptr_and_kind((const void *)ptr, (const int)kind)
 			- (sizeof(void *) * 3 + sizeof(size_t) * 3);
 	// if (size < (*(size_t *)(ptr - sizeof(size_t))))
 	// 	n_cpy = size;

@@ -3,6 +3,8 @@
 
 # include <sys/types.h>
 
+# define DEBUG_DPF 0
+
 enum	e_area_kind
 {
 	NONE = -1,
@@ -17,8 +19,8 @@ enum	e_memory_state
 	UNUSED,
 	USED
 };
-# define TINY_SIZE		16
-# define SMALL_SIZE		64
+# define TINY_SIZE		64
+# define SMALL_SIZE		512
 
 // typedef struct	s_chunk
 // {
@@ -45,7 +47,7 @@ typedef struct	s_mem
 	size_t			size;
 	int				kind;
 	int				fill;
-    t_ch			*user;
+    // t_ch			*user;
     // void			*user;
 }				t_mem;
 

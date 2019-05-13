@@ -18,6 +18,8 @@
 #include "ft_printf.h"
 int		get_kind_by_ptr(void *p)
 {
+	if (DEBUG_DPF)
+		ft_dpf(2, "%s:%s%s%s:%d\n", __FILE__, "\033[31m", __func__, "\033[0m", __LINE__);
 	t_ch	*ptr;
 
 	ptr = p - sizeof(t_ch);
@@ -26,6 +28,8 @@ int		get_kind_by_ptr(void *p)
 
 size_t	get_map_size_by_ptr_and_kind(const void *p, const int kind)
 {
+	if (DEBUG_DPF)
+		ft_dpf(2, "%s:%s%s%s:%d\n", __FILE__, "\033[31m", __func__, "\033[0m", __LINE__);
 	t_mem	*minju;
 	t_ch	*minju_doooo;
 
@@ -47,7 +51,8 @@ size_t	get_map_size_by_ptr_and_kind(const void *p, const int kind)
 
 void	*realloc(void *ptr, size_t size)
 {
-	ft_dpf(2, "%s:%s%s%s:%d\n", __FILE__, "\033[31m", __func__, "\033[0m", __LINE__);
+	if (DEBUG_DPF)
+		ft_dpf(2, "%s:%s%s%s:%d\n", __FILE__, "\033[31m", __func__, "\033[0m", __LINE__);
 	void	*p;
 	int		kind;
 	size_t	n_cpy;
@@ -64,14 +69,13 @@ void	*realloc(void *ptr, size_t size)
 	else
 		n_cpy = get_map_size_by_ptr_and_kind((const void *)ptr, (const int)kind)
 			- (sizeof(void *) * 3 + sizeof(size_t) * 3);
+	if (size < n_cpy)
+		n_cpy = size;
+	ft_memcpy(p, ptr, n_cpy);
 	// if (size < (*(size_t *)(ptr - sizeof(size_t))))
 	// 	n_cpy = size;
 	// else
 	// 	n_cpy = (*(size_t *)(ptr - sizeof(size_t)));
-	ft_dpf(2, "size to copy == %u\n", n_cpy);
-	ft_dpf(2, "memcpy __enter\n");
-	ft_memcpy(p, ptr, n_cpy);
-	ft_dpf(2, "memcpy exit__\n");
-	// free(ptr);
+	free(ptr);
 	return (p);
 }

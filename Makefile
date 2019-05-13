@@ -71,7 +71,8 @@ SRC_DIR					:=			./src
 INC_NAME				:=			ft_malloc_int.h			\
 									malloc.h				\
 
-SRC_NAME				:=			ft_free.c				\
+SRC_NAME				:=			ft_calloc.c				\
+									ft_free.c				\
 									ft_malloc.c				\
 									ft_realloc.c			\
 									show_alloc_mem.c		\
@@ -176,37 +177,12 @@ ra:
 	@$(MAKE)
 .PHONY: ra
 
-TEST_NAME				:=			$(TEST_DIR)/00-unit/00_test.c				\
-									$(TEST_DIR)/00-unit/01_test.c				\
-									$(TEST_DIR)/00-unit/02_test.c				\
-									$(TEST_DIR)/00-unit/03_test.c				\
-									$(TEST_DIR)/00-unit/03_test_bis.c			\
-									$(TEST_DIR)/00-unit/04_test.c				\
-									$(TEST_DIR)/00-unit/05_test.c				\
-									$(TEST_DIR)/01-bonus/thread.c				\
-									$(TEST_DIR)/01-bonus/bonus_threading.c	\
-
-TEST_BIN_DIR := $(TEST_DIR)/bin
-TEST_OBJ := $(TEST_NAME:.c=.out)
-
-$(TEST_BIN_DIR):
-	mkdir $@
-
-$(TEST_DIR)/00-unit/%.out: $(TEST_DIR)/00-unit/%.c
-	@$(CC) $< -o $@ $(NAME) -I$(INC_DIR)
-	@printf "${C_C}%s${C_X} :: ${C_R}%s${C_X}\n" $(NAME) $@
-
-$(TEST_DIR)/01-bonus/%.out: $(TEST_DIR)/01-bonus/%.c
-	@$(CC) $< -o $@ $(NAME) -I$(INC_DIR)
-	@printf "${C_C}%s${C_X} :: ${C_R}%s${C_X}\n" $(NAME) $@
-
 run test t: $(NAME) $(TEST_BIN_DIR) $(TEST_OBJ)
-	./run.sh ./$(TEST_DIR)/00-unit/00_test.out
-
-	# @find $(ROOT)/$(TEST_DIR) -name "*.c" -exec gcc {} -o {}.unit.out $(NAME_LINK) -I$(INC_DIR) \;
-	# @find -s $(ROOT)/$(TEST_DIR) -name "*.unit.out" \
-	# 	-exec $(ROOT)/run.sh {} \;
-	# @rm -f $(ROOT)/$(TEST_DIR)/**/*.unit.out
+	@find $(ROOT)/$(TEST_DIR) -name "*.c" \
+		-exec gcc {} -o {}.unit.out $(NAME_LINK) -I$(INC_DIR) \;
+	@find -s $(ROOT)/$(TEST_DIR) -name "*.unit.out" \
+		-exec $(ROOT)/run.sh {} \;
+	@rm -f $(ROOT)/$(TEST_DIR)/**/*.unit.out
 
 main: main.c
 	@$(CC) -o a.out main.c -I$(INC_DIR)

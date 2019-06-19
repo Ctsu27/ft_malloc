@@ -4,6 +4,7 @@
 # include <sys/types.h>
 
 # define DEBUG_DPF 0
+# define DEPLOY_DPF 1
 
 enum	e_area_kind
 {

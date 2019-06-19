@@ -101,7 +101,7 @@ void	free(void *ptr)
 		}
 		++idx;
 	}
-	ft_dpf(2, "nb of mmap() call -> %u\n", nb_of_map);
+	// ft_dpf(2, "nb of mmap() call -> %u\n", nb_of_map);
 	// show_alloc_mem();
 	idx = 0;
 	while (idx < 3)
@@ -111,7 +111,8 @@ void	free(void *ptr)
 		minju = (t_mem *)g_data.izone[idx].map;
 		while (minju != (t_mem *)0)
 		{
-			ft_dpf(2, "%smunmap()%s --> [%p]\n", "\033[31m", "\033[0m", minju);
+			if (!DEPLOY_DPF)
+				ft_dpf(2, "%smunmap()%s --> [%p]\n", "\033[31m", "\033[0m", minju);
 			minju_doooo = minju->fd;
 			munmap(minju, minju->size);
 			minju = minju_doooo;

@@ -6,7 +6,7 @@
 #    By: kehuang <kehuang@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/25 12:25:43 by kehuang           #+#    #+#              #
-#    Updated: 2019/05/04 10:11:33 by kehuang          ###   ########.fr        #
+#    Updated: 2019/06/19 19:18:06 by kehuang          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -183,6 +183,14 @@ run test t: $(NAME) $(TEST_BIN_DIR) $(TEST_OBJ)
 	@find -s $(ROOT)/$(TEST_DIR) -name "*.unit.out" \
 		-exec $(ROOT)/run.sh {} \;
 	@rm -f $(ROOT)/$(TEST_DIR)/**/*.unit.out
+
+build dist:
+	mkdir -p $(TEST_DIR)/bin
+	find $(TEST_DIR) -name "*.c" \
+		-exec gcc {} -o {}.unit.out objs/c_conv.o objs/ft_memcpy.o objs/ft_memset.o objs/ft_pf.o objs/ft_pf_buf.o objs/ft_realloc.o objs/id_conv.o objs/p_conv.o objs/s_conv.o objs/show_alloc_mem.o objs/u_conv.o objs/x__conv.o objs/x_conv.o -I$(INC_DIR) \;
+	find $(TEST_DIR) -name "*.unit.out" \
+		-exec mv {} $(TEST_DIR)/bin \;
+
 
 main: main.c
 	@$(CC) -o a.out main.c -I$(INC_DIR)

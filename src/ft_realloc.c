@@ -60,6 +60,7 @@ void	*realloc(void *ptr, size_t size)
 	if (ptr == (void *)0)
 		return (malloc(size));
 	kind = get_kind_by_ptr(ptr);
+	// TODO check if ptr non null is a valid address in metadata
 	if (kind == NONE || (p = malloc(size)) == (void *)0)
 		return ((void *)0);
 	if (kind == TINY)
@@ -72,10 +73,8 @@ void	*realloc(void *ptr, size_t size)
 	if (size < n_cpy)
 		n_cpy = size;
 	ft_memcpy(p, ptr, n_cpy);
-	// if (size < (*(size_t *)(ptr - sizeof(size_t))))
-	// 	n_cpy = size;
-	// else
-	// 	n_cpy = (*(size_t *)(ptr - sizeof(size_t)));
 	free(ptr);
 	return (p);
 }
+
+// RODO reallocf to launch vim from bnoufel

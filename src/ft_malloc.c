@@ -94,7 +94,8 @@ void	*get_map(const int kind, const size_t size, size_t size_to_alloc)
 	map = mmap((void *)0, size_to_alloc,
 			PROT_READ | PROT_WRITE,
 			MAP_ANON | MAP_PRIVATE, -1, 0);
-	ft_dpf(2, "%smmap()%s -> %p\n", "\033[36m", "\033[0m", map);
+	if (!DEPLOY_DPF)
+		ft_dpf(2, "%smmap()%s -> %p\n", "\033[36m", "\033[0m", map);
 	if (DEBUG_DPF)
 		ft_dpf(2, "%smap address%s -> %p\n", "\033[36m", "\033[0m", map);
 	return (map);
@@ -171,15 +172,19 @@ void	select_nako(void *map, const size_t size_map)
 	if (DEBUG_DPF)
 		ft_dpf(2, "block size ---> %u\n", block_size);
 
-	ft_dpf(2, "size_map   == %u\n", size_map);
-	ft_dpf(2, "map            == [%u]\n", map);
-	ft_dpf(2, "map + size_map == [%u]\n", map + size_map);
+	if (DEBUG_DPF) {
+		ft_dpf(2, "size_map   == %u\n", size_map);
+		ft_dpf(2, "map            == [%u]\n", map);
+		ft_dpf(2, "map + size_map == [%u]\n", map + size_map);
+	}
 	// minju_dooooo = minju;
 	minju_dooooo = map;
 	end = map + size_map;
-	ft_dpf(2, "minju_dooooo [%p]\n", minju_dooooo);
-	ft_dpf(2, "end          [%p]\n", end);
-	ft_dpf(2, "diff hehe    [%u]\n", end - minju_dooooo);
+	if (DEBUG_DPF) {
+		ft_dpf(2, "minju_dooooo [%p]\n", minju_dooooo);
+		ft_dpf(2, "end          [%p]\n", end);
+		ft_dpf(2, "diff hehe    [%u]\n", end - minju_dooooo);
+	}
 	// while (idx < max_iteration)
 	while (minju_dooooo + block_size < end)
 	{
@@ -202,10 +207,12 @@ void	select_nako(void *map, const size_t size_map)
 		minju += (block_size);
 		++idx;
 	}
-	ft_dpf(2, "map:        [%p] size map -> [%u]\n", map, size_map);
-	ft_dpf(2, "end select: [%p]\n", ((void *)ptr) + block_size);
-	ft_dpf(2, "final:      [%p]\n", map + size_map);
-	ft_dpf(2, "diff:       [%p]\n", (map + size_map - (void *)ptr));
+	if (DEBUG_DPF) {
+		ft_dpf(2, "map:        [%p] size map -> [%u]\n", map, size_map);
+		ft_dpf(2, "end select: [%p]\n", ((void *)ptr) + block_size);
+		ft_dpf(2, "final:      [%p]\n", map + size_map);
+		ft_dpf(2, "diff:       [%p]\n", (map + size_map - (void *)ptr));
+	}
 	ptr->fd = (t_ch *)0;
 }
 
@@ -262,10 +269,12 @@ void	select_yena(void *map, const size_t size_map)
 		minju += (block_size);
 		++idx;
 	}
-	ft_dpf(2, "map:        [%p] size map -> [%u]\n", map, size_map);
-	ft_dpf(2, "end select: [%p]\n", ((void *)ptr) + block_size);
-	ft_dpf(2, "final:      [%p]\n", map + size_map);
-	ft_dpf(2, "diff:       [%p]\n", (end - (void *)ptr));
+	if (DEBUG_DPF) {
+		ft_dpf(2, "map:        [%p] size map -> [%u]\n", map, size_map);
+		ft_dpf(2, "end select: [%p]\n", ((void *)ptr) + block_size);
+		ft_dpf(2, "final:      [%p]\n", map + size_map);
+		ft_dpf(2, "diff:       [%p]\n", (end - (void *)ptr));
+	}
 	ptr->fd = (t_ch *)0;
 }
 
@@ -529,9 +538,3 @@ void	*malloc(size_t size)
 		return ((void *)0);
 	return (get_user_mem((const int)kind, size));
 }
-
-// mem = mmap(0, size + sizeof(size_t), PROT_READ | PROT_WRITE,
-// 		MAP_ANON | MAP_PRIVATE, -1, 0);
-// ptr = (size_t *)mem;
-// *ptr = size;
-// return (mem + sizeof(size_t));

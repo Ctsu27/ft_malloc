@@ -68,14 +68,16 @@ endif
 
 SRC_DIR					:=			./src
 
-INC_NAME				:=			ft_malloc_int.h			\
-									malloc.h				\
+INC_NAME				:=			ft_malloc_int.h							\
+									malloc.h								\
 
-SRC_NAME				:=			ft_calloc.c				\
-									ft_free.c				\
-									ft_malloc.c				\
-									ft_realloc.c			\
-									show_alloc_mem.c		\
+# SRC_NAME				:=			ft_malloc.c								\
+
+SRC_NAME				:=			ft_calloc.c								\
+									ft_free.c								\
+									ft_malloc.c								\
+									ft_realloc.c							\
+									show_alloc_mem.c						\
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(addprefix $(SRC_DIR)/,$(INC_NAME))
 	@$(CC) $(CFLAGS) -c $< -o $@ -I$(INC_DIR)
@@ -88,10 +90,21 @@ OBJS					:=			$(addprefix $(OBJ_DIR)/,$(SRC_NAME:.c=.o))
 
 SRC_UTILS_DIR			:=			utils
 
-INC_UTILS_NAME			:=			utils.h					\
+INC_UTILS_NAME			:=			utils.h									\
 
-SRC_UTILS_NAME			:=			ft_memcpy.c				\
-									ft_memset.c				\
+SRC_UTILS_NAME			:=			ft_memcpy.c								\
+									ft_memset.c								\
+									append_area.c							\
+									append_to_meta_mem_and_get_user_mem.c	\
+									find_chunk_by_ptr.c						\
+									get_area_kind_by_size.c					\
+									get_meta_chunk_mem.c					\
+									get_user_mem.c							\
+									new_meta_mem.c							\
+									new_user_mem.c							\
+									round_page_size.c						\
+									search_available_user_mem.c				\
+									size_align.c							\
 
 OBJS					+=			$(addprefix $(OBJ_DIR)/,$(SRC_UTILS_NAME:.c=.o))
 
@@ -103,18 +116,18 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/$(SRC_UTILS_DIR)/%.c $(addprefix $(SRC_DIR)/$(SRC_UTI
 
 SRC_FT_PRINTF_DIR		:=			ft_printf
 
-INC_FT_PRINTF_NAME		:=			ft_printf.h				\
-									ft_printf_int.h			\
+INC_FT_PRINTF_NAME		:=			ft_printf.h								\
+									ft_printf_int.h							\
 
-SRC_FT_PRINTF_NAME		:=			ft_pf.c					\
-									ft_pf_buf.c				\
-									c_conv.c				\
-									id_conv.c				\
-									p_conv.c				\
-									s_conv.c				\
-									u_conv.c				\
-									x__conv.c				\
-									x_conv.c				\
+SRC_FT_PRINTF_NAME		:=			ft_pf.c									\
+									ft_pf_buf.c								\
+									c_conv.c								\
+									id_conv.c								\
+									p_conv.c								\
+									s_conv.c								\
+									u_conv.c								\
+									x__conv.c								\
+									x_conv.c								\
 
 OBJS					+=			$(addprefix $(OBJ_DIR)/,$(SRC_FT_PRINTF_NAME:.c=.o))
 

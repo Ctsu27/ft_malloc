@@ -30,6 +30,7 @@ void	*seach_available_user_mem(const int kind, size_t size)
 					// ft_dpf(2, "=== user mem available [%u]\n", cur);
 					chunk->size_user_requested = size;
 					chunk->is_used = 1;
+					// TODO move chunk to right pool/area
 					split_chunk(chunk);
 					return (chunk->user_mem);
 				}

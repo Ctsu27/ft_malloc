@@ -14,6 +14,7 @@
 #include "ft_malloc_int.h"
 #include "utils.h"
 
+#include "malloc.h"
 void	free(void *ptr)
 {
 	PRINT_FILE();
@@ -60,6 +61,7 @@ __attribute__((destructor))
 void	garbage_collector(void)
 {
 	PRINT_FILE();
+	show_alloc_mem();
 	t_area	*pool;
 	t_area	*victim;
 	int		idx;

@@ -1,31 +1,45 @@
 #include "ft_malloc_int.h"
 
+#include "utils.h"
 void	*seach_available_user_mem(const int kind, size_t size)
 {
+	PRINT_FILE();
+	(void)kind;
 	t_area	*minju;
 	t_chunk	*chunk;
 	size_t	cur;
 	size_t	end;
+	int		idx;
 
-	if ((minju = g_mdata.izone[kind]) == (t_area *)0)
-		return ((void *)0);
-	while (minju != (t_area *)0)
+	// if ((minju = g_mdata.izone[kind]) == (t_area *)0)
+	// 	return ((void *)0);
+	idx = 0;
+	while (idx < SIZE_KIND)
 	{
-		chunk = (t_chunk *)(((void *)minju) + sizeof(*minju));
-		cur = 0;
-		end = (minju->size_map - sizeof(*minju)) / sizeof(*chunk);
-		while (cur < end)
+		minju = g_mdata.izone[idx];
+		while (minju != (t_area *)0)
 		{
-			if (chunk->user_mem != (void *)0 && chunk->size_chunk >= size)
+			chunk = (t_chunk *)(((void *)minju) + sizeof(*minju));
+			cur = 0;
+			end = (minju->size_map - sizeof(*minju)) / sizeof(*chunk);
+			while (cur < end)
 			{
-				chunk->size_user_requested = size;
-				chunk->is_freed = 0;
-				return (chunk->user_mem);
+				if (chunk->user_mem != (void *)0 && chunk->size_chunk >= size
+						&& !chunk->is_used)
+				{
+					// ft_dpf(2, "=== user mem available [%u]\n", cur);
+					chunk->size_user_requested = size;
+					chunk->is_used = 1;
+					split_chunk(chunk);
+					return (chunk->user_mem);
+				}
+				chunk = chunk + 1;
+				++cur;
 			}
-			chunk = chunk + 1;
-			++cur;
+			minju = minju->fd;
 		}
-		minju = minju->fd;
+		++idx;
 	}
+	// ft_dpf(2, "no user mem available\n");
 	return ((void *)0);
 }

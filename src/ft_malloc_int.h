@@ -46,7 +46,7 @@ typedef struct	s_area
  *	void 	*user_mem; ptr of an amount of map for user
  *	size_t	size_of_portion_of_this_map;
  *	size_t	size_requested_of_user_within_this_map;
- *	size_t	is_freed; // can use only 1bit instead of 32/64bit
+ *	size_t	is_used; // can use only 1bit instead of 32/64bit
  */
 
 typedef struct	s_chunk
@@ -54,7 +54,7 @@ typedef struct	s_chunk
 	void	*user_mem;
 	size_t	size_chunk;
 	size_t	size_user_requested;
-	size_t	is_freed;
+	size_t	is_used;
 }				t_chunk;
 
 typedef struct	s_meta

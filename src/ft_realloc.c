@@ -16,6 +16,7 @@
 
 void	*realloc(void *ptr, size_t size)
 {
+	PRINT_FILE();
 	void	*res;
 	t_chunk	*chunk;
 	size_t	size_to_copy;
@@ -24,17 +25,14 @@ void	*realloc(void *ptr, size_t size)
 	if (ptr == (void *)0)
 		return (malloc(size));
 	kind = get_area_kind_by_size((const size_t)size);
-	if (kind == NONE || (res = malloc(size)) == (void *)0)
+	if (kind == NONE || (chunk = find_chunk_by_ptr(ptr)) == (t_chunk *)0
+			|| (res = malloc(size)) == (void *)0)
 		return ((void *)0);
-	chunk = find_chunk_by_ptr(ptr);
-	if (chunk != (t_chunk *)0)
-	{
-		size_to_copy = chunk->size_user_requested < size
-			? chunk->size_user_requested : size;
-		ft_memcpy(res, ptr, size_to_copy);
-	}
+	size_to_copy = chunk->size_user_requested < size
+		? chunk->size_user_requested : size;
+	ft_memcpy(res, ptr, size_to_copy);
 	free(ptr);
-	return ((void *)0);
+	return (res);
 }
 
 // RODO reallocf to launch vim from bnoufel

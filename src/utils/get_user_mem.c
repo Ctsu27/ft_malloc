@@ -4,6 +4,7 @@
 
 void	*get_user_mem(const int kind, size_t size)
 {
+	PRINT_FILE();
 	size_t	size_map;
     void	*mem_for_user;
 

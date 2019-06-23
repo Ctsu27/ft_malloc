@@ -16,12 +16,19 @@
 
 void	free(void *ptr)
 {
+	PRINT_FILE();
+	// ft_dpf(2, "%sFree X: %s%p%s\n", C_P, C_Y, ptr, C_X);
 	t_chunk	*chunk;
 
+	if (ptr == (void *)0)
+		return ;
 	chunk = find_chunk_by_ptr(ptr);
 	if (chunk != (t_chunk *)0)
 	{
-		chunk->is_freed = 1;
+		// ft_dpf(2, "%sFreeing address: %s%p%s\n", C_P, C_Y, ptr, C_X);
+		chunk->size_user_requested = 0;
+		chunk->is_used = 0;
+		// ft_dpf(2, "ca crash ???\n");
 	}
 }
 
@@ -37,7 +44,13 @@ void	delete_chunks_from_pool(t_area *pool)
 	while (cur < end)
 	{
 		if (chunk->user_mem != (void *)0 && chunk->size_chunk > 0)
+		{
+			ft_dpf(2, "%s_________ END%s ---> %smunmap%s() : %s[%p] [%u]%s\n",
+				   C_G, C_X,
+				   C_R, C_X,
+				   C_Y, (void *)chunk, chunk->size_chunk, C_X);
 			munmap((void *)chunk, chunk->size_chunk);
+		}
 		chunk = chunk + 1;
 		++cur;
 	}
@@ -46,6 +59,7 @@ void	delete_chunks_from_pool(t_area *pool)
 __attribute__((destructor))
 void	garbage_collector(void)
 {
+	PRINT_FILE();
 	t_area	*pool;
 	t_area	*victim;
 	int		idx;
@@ -59,6 +73,10 @@ void	garbage_collector(void)
 			victim = pool;
 			pool = pool->fd;
 			delete_chunks_from_pool(victim);
+			// ft_dpf(2, "%s_________ END%s ---> %smunmap%s() : %s[%p] [%u]%s\n",
+			// 	C_G, C_X,
+			// 	C_R, C_X,
+			// 	C_Y, (void *)victim, victim->size_map, C_X);
 			munmap((void *)victim, victim->size_map);
 		}
 		++idx;

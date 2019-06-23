@@ -4,12 +4,14 @@
 
 t_area	*new_meta_mem(void)
 {
+	PRINT_FILE();
 	t_area	*res;
 
 	if ((res = mmap((void *)0, (size_t)g_mdata.page_size,
 				PROT_READ | PROT_WRITE,
 				MAP_ANON | MAP_PRIVATE, -1, 0)) != (t_area *)0)
 	{
+		// ft_dpf(2, "%sMAP META: %s%p%s\n", C_G, C_Y, res, C_X);
 		ft_memset((void *)res, 0, (size_t)g_mdata.page_size);
 		res->bk = (t_area *)0;
 		res->fd = (t_area *)0;

@@ -23,8 +23,25 @@ t_meta	g_mdata = {
 	.page_size = 0
 };
 
+char	*kind_to_string(const int kind)
+{
+	char	*s[SIZE_KIND + 1] = {
+		[TINY] = "TINY",
+		[SMALL] = "SMALL",
+		[LARGE] = "LARGE",
+		[SIZE_KIND] = "NONE"
+	};
+
+	if (kind == NONE)
+		return (s[SIZE_KIND]);
+	return (s[kind]);
+}
+
 void	*malloc(size_t size)
 {
+	PRINT_FILE();
+	// ft_dpf(2, "USER REQUEST SIZE [%u]\n", size);
+	void	*res;
 	int		kind;
 
 	kind = get_area_kind_by_size((const size_t)size);
@@ -32,5 +49,10 @@ void	*malloc(size_t size)
 		return ((void *)0);
 	if (g_mdata.page_size <= 0 && (g_mdata.page_size = getpagesize()) <= 0)
 		return ((void *)0);
-	return (get_user_mem((const int)kind, size));
+	res = get_user_mem((const int)kind, size);
+	// ft_dpf(2, "%sAllocation address %s[%u] : %s[%p]%s\n",
+	// 		C_P, kind_to_string(kind),
+	// 		size,
+	// 		C_Y, res, C_X);
+	return (res);
 }

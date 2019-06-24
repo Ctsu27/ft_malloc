@@ -44,6 +44,8 @@ void	*append_to_meta_mem_and_get_user_mem(const int kind,
 int		get_area_kind_by_size(const size_t size);
 t_chunk	*get_meta_chunk_mem(const int kind);
 void	*get_user_mem(const int kind, size_t size);
+char	*kind_to_string(const int kind);
+
 t_area	*new_meta_mem(void);
 void	*new_user_mem(size_t size);
 size_t	round_page_size(size_t size, size_t page_size);

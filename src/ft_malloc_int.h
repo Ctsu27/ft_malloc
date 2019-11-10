@@ -22,7 +22,7 @@ enum	e_memory_state
 };
 
 # define TINY_SIZE		64
-# define SMALL_SIZE		512
+# define SMALL_SIZE		4096
 
 struct	s_dlst
 {

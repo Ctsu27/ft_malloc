@@ -11,111 +11,75 @@
 /* ************************************************************************** */
 
 #include <sys/mman.h>
-#include "malloc.h"
 #include "ft_malloc_int.h"
+#include "utils.h"
 
-#include "ft_printf.h"
+#include "malloc.h"
 void	free(void *ptr)
 {
-	if (DEBUG_DPF)
-		ft_dpf(2, "%s:%s%s%s:%d\n", __FILE__, "\033[31m", __func__, "\033[0m", __LINE__);
-	t_ch	*minju;
-	t_mem	*minju_doooo;
-	size_t	idx;
+	PRINT_FILE();
+	// ft_dpf(2, "%sFree X: %s%p%s\n", C_P, C_Y, ptr, C_X);
+	t_chunk	*chunk;
 
-	// return ;
 	if (ptr == (void *)0)
 		return ;
-	if (DEBUG_DPF)
-		ft_dpf(2, "ptr address to free ===> %p\n", ptr);
-	if (DEBUG_DPF)
-		ft_dpf(2, "offset ptr address to free ===> %p\n", ptr - sizeof(t_ch));
-	minju = (t_ch *)(ptr - sizeof(t_ch));
-	idx = 0;
-	while (idx < 3)
+	chunk = find_chunk_by_ptr(ptr);
+	if (chunk != (t_chunk *)0)
 	{
-		minju_doooo = g_data.izone[idx].map;
-		while (minju_doooo != (t_mem *)0)
-		{
-			// if (DEBUG_DPF)
-			// 	ft_dpf(2, "%sCOUCOU%s\n", "\033[36m", "\033[0m");
-			if ((void *)minju_doooo < ptr && ptr < ((void *)minju_doooo) + minju_doooo->size)
-			{
-				if (DEBUG_DPF)
-					ft_dpf(2, "%sSET UNUSED%s\n", "\033[36m", "\033[0m");
-				minju->used = UNUSED;
-				return;
-			}
-			minju_doooo = minju_doooo->fd;
-		}
-		++idx;
-	}
-	return ;
-	minju = (t_ch *)(ptr - sizeof(t_ch));
-	if (DEBUG_DPF)
-		ft_dpf(2, "minju ===> %p\n", (t_ch *)(ptr - sizeof(t_ch)));
-	if (DEBUG_DPF)
-		ft_dpf(2, "kind ===> %d\n", minju->kind);
-	minju_doooo = g_data.izone[minju->kind].map;
-	if (DEBUG_DPF)
-		ft_dpf(2, "%sALLO%s\n", "\033[36m", "\033[0m");
-	while (minju_doooo != (t_mem *)0)
-	{
-		if (DEBUG_DPF)
-			ft_dpf(2, "%sCOUCOU%s\n", "\033[36m", "\033[0m");
-		if ((void *)minju_doooo < ptr
-				&& ptr < ((void *)minju_doooo) + minju_doooo->size)
-		{
-			if (DEBUG_DPF)
-				ft_dpf(2, "%sSET UNUSED%s\n", "\033[36m", "\033[0m");
-			minju->used = UNUSED;
-			return ;
-		}
-		minju_doooo = minju_doooo->fd;
+		// ft_dpf(2, "%sFreeing address: %s%p%s\n", C_P, C_Y, ptr, C_X);
+		chunk->size_user_requested = 0;
+		chunk->is_used = 0;
+		// ft_dpf(2, "ca crash ???\n");
 	}
 }
 
- __attribute__((destructor))void	izone_ending_contract(void)
+void	delete_chunks_from_pool(t_area *pool)
 {
-	if (DEBUG_DPF)
-		ft_dpf(2, "%s:%s%s%s:%d\n", __FILE__, "\033[31m", __func__, "\033[0m", __LINE__);
-	t_mem	*minju;
-	t_mem	*minju_doooo;
-	size_t	idx;
-	char	*tmp[3] = {
-		"nako",
-		"yena",
-		"wonyoung"
-	};
-	size_t	nb_of_map;
+	t_chunk	*chunk;
+	size_t	cur;
+	size_t	end;
 
-	nb_of_map = 0;
-	idx = 0;
-	while (idx < 3)
+	chunk = (t_chunk *)(((void *)pool) + sizeof(*pool));
+	cur = 0;
+	end = (pool->size_map - sizeof(*pool)) / sizeof(*chunk);
+	while (cur < end)
 	{
-		minju = (t_mem *)g_data.izone[idx].map;
-		while (minju != (t_mem *)0)
+		if (chunk->user_mem != (void *)0 && chunk->size_chunk > 0)
 		{
-			++nb_of_map;
-			minju = minju->fd;
+			ft_dpf(2, "%s_________ END%s ---> %smunmap%s() : %s[%p] [%u]%s\n",
+				   C_G, C_X,
+				   C_R, C_X,
+				   C_Y, (void *)chunk, chunk->size_chunk, C_X);
+			munmap((void *)chunk, chunk->size_chunk);
 		}
-		++idx;
+		chunk = chunk + 1;
+		++cur;
 	}
-	// ft_dpf(2, "nb of mmap() call -> %u\n", nb_of_map);
-	// show_alloc_mem();
+}
+
+__attribute__((destructor))
+void	garbage_collector(void)
+{
+	PRINT_FILE();
+	show_alloc_mem_hex();
+	t_area	*pool;
+	t_area	*victim;
+	int		idx;
+
 	idx = 0;
-	while (idx < 3)
+	while (idx < SIZE_KIND)
 	{
-		if (DEBUG_DPF)
-			ft_dpf(2, "%s%s%s fan club\n", "\033[33m", tmp[idx], "\033[0m");
-		minju = (t_mem *)g_data.izone[idx].map;
-		while (minju != (t_mem *)0)
+		pool = g_mdata.izone[idx];
+		while (pool != (t_area *)0)
 		{
-			if (!DEPLOY_DPF)
-				ft_dpf(2, "%smunmap()%s --> [%p]\n", "\033[31m", "\033[0m", minju);
-			minju_doooo = minju->fd;
-			munmap(minju, minju->size);
-			minju = minju_doooo;
+			victim = pool;
+			pool = pool->fd;
+			delete_chunks_from_pool(victim);
+			// ft_dpf(2, "%s_________ END%s ---> %smunmap%s() : %s[%p] [%u]%s\n",
+			// 	C_G, C_X,
+			// 	C_R, C_X,
+			// 	C_Y, (void *)victim, victim->size_map, C_X);
+			munmap((void *)victim, victim->size_map);
 		}
 		++idx;
 	}

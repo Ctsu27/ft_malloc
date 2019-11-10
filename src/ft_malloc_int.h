@@ -20,66 +20,56 @@ enum	e_memory_state
 	UNUSED,
 	USED
 };
+
 # define TINY_SIZE		64
-# define SMALL_SIZE		512
+# define SMALL_SIZE		4096
 
-// typedef struct	s_chunk
-// {
-// 	size_t			prev_size;
-// 	size_t			size;
-// 	struct s_chunk	*fd;
-// 	struct s_chunk	*bk;
-// 	// user mem
-// }				t_chunk;
-
-typedef struct	s_ch
+struct	s_dlst
 {
-	_Bool		used; // padding (need only 1 bit)
-	_Bool		fill[3];
-	int			kind;
-    struct s_ch	*fd;
-    // void		*p; // user
-}				t_ch;
+	struct s_dlst	*bk;
+	struct s_dlst	*fd;
+};
 
-typedef struct	s_mem
-{
-	struct s_mem	*bk;
-    struct s_mem	*fd;
-	size_t			size;
-	int				kind;
-	int				fill;
-    // t_ch			*user;
-    // void			*user;
-}				t_mem;
+typedef struct s_dlst t_dlst;
 
 typedef struct	s_area
 {
-	t_mem	*map; // map list
-    size_t	size; // size map const for tiny and small
+	struct s_area	*bk;
+	struct s_area	*fd;
+	size_t			size_map;
+	size_t			fill;
 }				t_area;
+
+// t_area is for my meta data to stock other map for user
+// after t_area: as chunks
+/**
+ *	void 	*user_mem; ptr of an amount of map for user
+ *	size_t	size_of_portion_of_this_map;
+ *	size_t	size_requested_of_user_within_this_map;
+ *	size_t	is_used; // can use only 1bit instead of 32/64bit
+ */
+
+typedef struct	s_chunk
+{
+	void	*user_mem;
+	size_t	size_chunk;
+	size_t	size_user_requested;
+	size_t	is_used;
+}				t_chunk;
 
 typedef struct	s_meta
 {
 	union {
 		struct {
-			t_area	nako;
-			t_area	yena;
-			t_area	wonyoung;
+			t_area	*nako;
+			t_area	*yena;
+			t_area	*wonyoung;
 		};
-		t_area		izone[3]; // IZ*ONE HWAITING
+		t_area		*izone[SIZE_KIND]; // IZ*ONE HWAITING
 	};
 	int				page_size;
 }				t_meta;
 
-// typedef struct	s_meta
-// {
-//     t_area	nako;
-//     t_area	yena;
-//     t_area	wonyoung;
-//     int		page_size;
-// 	int		is_init;
-// }				t_meta;
-
-extern t_meta	g_data;
+extern t_meta	g_mdata;
 
 #endif

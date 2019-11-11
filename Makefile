@@ -94,16 +94,7 @@ INC_UTILS_NAME			:=			utils.h									\
 
 SRC_UTILS_NAME			:=			ft_memcpy.c								\
 									ft_memset.c								\
-									append_area.c							\
-									append_to_meta_mem_and_get_user_mem.c	\
-									find_chunk_by_ptr.c						\
-									get_area_kind_by_size.c					\
-									get_meta_chunk_mem.c					\
-									get_user_mem.c							\
-									new_meta_mem.c							\
-									new_user_mem.c							\
 									round_page_size.c						\
-									search_available_user_mem.c				\
 									size_align.c							\
 
 OBJS					+=			$(addprefix $(OBJ_DIR)/,$(SRC_UTILS_NAME:.c=.o))

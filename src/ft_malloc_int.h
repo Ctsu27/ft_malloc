@@ -1,10 +1,16 @@
 #ifndef FT_MALLOC_INT_H
 # define FT_MALLOC_INT_H
 
-# include <sys/types.h>
+# include <stdlib.h>
 
 # define DEBUG_DPF 0
 # define DEPLOY_DPF 1
+
+# define TINY_SIZE		64
+# define SMALL_SIZE		4096
+
+# define __CONSTRUCTOR	__attribute__((constructor)) static void
+# define __DESTRUCTOR	__attribute__((destructor)) static void
 
 enum	e_area_kind
 {
@@ -21,41 +27,11 @@ enum	e_memory_state
 	USED
 };
 
-# define TINY_SIZE		64
-# define SMALL_SIZE		4096
-
-struct	s_dlst
-{
-	struct s_dlst	*bk;
-	struct s_dlst	*fd;
-};
-
-typedef struct s_dlst t_dlst;
-
 typedef struct	s_area
 {
-	struct s_area	*bk;
-	struct s_area	*fd;
-	size_t			size_map;
-	size_t			fill;
+	struct s_area	*next;
+	void			*user_pool;
 }				t_area;
-
-// t_area is for my meta data to stock other map for user
-// after t_area: as chunks
-/**
- *	void 	*user_mem; ptr of an amount of map for user
- *	size_t	size_of_portion_of_this_map;
- *	size_t	size_requested_of_user_within_this_map;
- *	size_t	is_used; // can use only 1bit instead of 32/64bit
- */
-
-typedef struct	s_chunk
-{
-	void	*user_mem;
-	size_t	size_chunk;
-	size_t	size_user_requested;
-	size_t	is_used;
-}				t_chunk;
 
 typedef struct	s_meta
 {
@@ -65,7 +41,7 @@ typedef struct	s_meta
 			t_area	*yena;
 			t_area	*wonyoung;
 		};
-		t_area		*izone[SIZE_KIND]; // IZ*ONE HWAITING
+		t_area		*izone[SIZE_KIND];
 	};
 	int				page_size;
 }				t_meta;

@@ -13,11 +13,11 @@ static inline void	*ft_map(size_t size)
 			MAP_ANON | MAP_PRIVATE, -1, 0);
 	if (res == MAP_FAILED)
 		return (NULL);
-	// ft_dpf(2, "MAP[%u] return: %p\n", size, res);
 	return (res);
 }
 
-static inline void	*get_available_mem(t_chunk *mem, int offset, int length)
+static inline void	*get_available_mem(t_chunk *mem,
+		size_t size_requested, int offset, int length)
 {
 	PRINT_FILE();
 	_Bool	*is_used;
@@ -31,7 +31,7 @@ static inline void	*get_available_mem(t_chunk *mem, int offset, int length)
 		idx = 0;
 		while (idx < length)
 		{
-			if (!is_used[idx])
+			if (!is_used[idx] && size_requested <= mem->user_size)
 			{
 				is_used[idx] = 1;
 				return (mem->user_pool + (idx * offset));
@@ -69,7 +69,6 @@ static inline t_chunk	*new_meta(size_t user_size, int length)
 	size_t	size;
 
 	size = sizeof(t_chunk) + (sizeof(_Bool) * length);
-	// ft_dpf(2, "size meta: %u\n", size);
 	res = ft_map(size);
 	if (res != NULL)
 	{
@@ -97,7 +96,7 @@ static inline void	*kalloc(t_area *kwon_eunbi, size_t size)
 					? kwon_eunbi->size_chunk
 					: size, kwon_eunbi->length)) == NULL)
 		return (NULL);
-	res = get_available_mem(kwon_eunbi->root,
+	res = get_available_mem(kwon_eunbi->root, size,
 			kwon_eunbi->size, kwon_eunbi->length);
 	if (res == NULL)
 	{
@@ -106,7 +105,7 @@ static inline void	*kalloc(t_area *kwon_eunbi, size_t size)
 					: size, kwon_eunbi->length)) != 0)
 			return (NULL);
 		else
-			res = get_available_mem(kwon_eunbi->root,
+			res = get_available_mem(kwon_eunbi->root, size,
 					kwon_eunbi->size, kwon_eunbi->length);
 	}
 	return (res);
@@ -134,7 +133,9 @@ inline static size_t	to_calcul(const int base, const int size, int *i)
 	*i = 1;
 	while ((*i) < 100 && base * (*i) / size < 100)
 		++(*i);
-	return (base * (*i));
+	if (*i < 128)
+		*i = 128;
+	return (size * (*i));
 }
 
 static void	init_meta(void)

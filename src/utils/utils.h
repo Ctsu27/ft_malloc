@@ -43,5 +43,6 @@ size_t	size_align(size_t size);
 
 int		get_kind(const size_t size);
 t_chunk	*find_chunk_by_user_mem(void *ptr);
+t_chunk	*find_chunk_idx_by_user_mem(void *ptr, int *index);
 
 #endif

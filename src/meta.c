@@ -10,7 +10,9 @@ inline static size_t	to_calcul(const int base, const int size, int *i)
 	*i = 1;
 	while ((*i) < 100 && base * (*i) / size < 100)
 		++(*i);
-	return (base * (*i));
+	if (*i < 128)
+		*i = 128;
+	return (size * (*i));
 }
 
 __CONSTRUCTOR			init_meta(void)
@@ -29,15 +31,15 @@ __CONSTRUCTOR			init_meta(void)
 	g_mdata.wonyoung.size = 0;
 	g_mdata.wonyoung.length = 1;
 
-	ft_dpf(2, "nako.size: %u\n", g_mdata.nako.size);
-	ft_dpf(2, "nako.size_chunk: %u\n", g_mdata.nako.size_chunk);
-	ft_dpf(2, "nako.length: %u\n", g_mdata.nako.length);
-	ft_dpf(2, "yena.size: %u\n", g_mdata.yena.size);
-	ft_dpf(2, "yena.size_chunk: %u\n", g_mdata.yena.size_chunk);
-	ft_dpf(2, "nako.length: %u\n", g_mdata.nako.length);
-	ft_dpf(2, "wonyoung.size_chunk: %u\n", g_mdata.wonyoung.size_chunk);
-	ft_dpf(2, "wonyoung.size: %u\n", g_mdata.wonyoung.size);
-	ft_dpf(2, "wonyoung.length: %u\n", g_mdata.wonyoung.length);
+	// ft_dpf(2, "nako.size: %u\n", g_mdata.nako.size);
+	// ft_dpf(2, "nako.size_chunk: %u\n", g_mdata.nako.size_chunk);
+	// ft_dpf(2, "nako.length: %u\n", g_mdata.nako.length);
+	// ft_dpf(2, "yena.size: %u\n", g_mdata.yena.size);
+	// ft_dpf(2, "yena.size_chunk: %u\n", g_mdata.yena.size_chunk);
+	// ft_dpf(2, "nako.length: %u\n", g_mdata.nako.length);
+	// ft_dpf(2, "wonyoung.size_chunk: %u\n", g_mdata.wonyoung.size_chunk);
+	// ft_dpf(2, "wonyoung.size: %u\n", g_mdata.wonyoung.size);
+	// ft_dpf(2, "wonyoung.length: %u\n", g_mdata.wonyoung.length);
 }
 
 static inline void		_delete(t_area *kwon_eunbi)
@@ -54,14 +56,15 @@ static inline void		_delete(t_area *kwon_eunbi)
 	{
 		tmp = cur;
 		cur = cur->next;
-		ft_memset(tmp->user_pool, 0, size_chunk);
-		munmap(tmp->user_pool, size_chunk);
+		ft_memset(tmp->user_pool, 0, tmp->user_size);
+		munmap(tmp->user_pool, tmp->user_size);
 		munmap(tmp, size_meta);
 	}
 }
 
 __DESTRUCTOR			dump_garbage(void)
 {
+	PRINT_FILE();
 	t_area	*izone;
 	int		idx;
 

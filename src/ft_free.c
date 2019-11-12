@@ -6,12 +6,13 @@
 void			free(void *ptr)
 {
 	PRINT_FILE();
+	t_chunk	*meta;
 
 	if (ptr == (void *)0)
 		return ;
-}
-
-__DESTRUCTOR	garbage_collector(void)
-{
-	PRINT_FILE();
+	meta = find_chunk_by_user_mem(ptr);
+	if (meta != NULL)
+	{
+		// make unused;
+	}
 }

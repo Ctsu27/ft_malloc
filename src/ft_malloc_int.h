@@ -7,10 +7,10 @@
 # define DEPLOY_DPF 1
 
 # define TINY_SIZE		64
-# define SMALL_SIZE		4096
+# define SMALL_SIZE		1024
 
-# define __CONSTRUCTOR	__attribute__((constructor)) static void
-# define __DESTRUCTOR	__attribute__((destructor)) static void
+# define __CONSTRUCTOR	__attribute__((constructor)) void
+# define __DESTRUCTOR	__attribute__((destructor)) void
 
 enum	e_area_kind
 {
@@ -27,21 +27,31 @@ enum	e_memory_state
 	USED
 };
 
+typedef struct	s_chunk
+{
+	struct s_chunk	*next;
+	size_t			user_size;
+	void			*user_pool;
+}				t_chunk;
+
 typedef struct	s_area
 {
-	struct s_area	*next;
-	void			*user_pool;
+	t_chunk	*root;
+	size_t	size_chunk;
+	int		size;
+	int		length;
 }				t_area;
+
 
 typedef struct	s_meta
 {
 	union {
 		struct {
-			t_area	*nako;
-			t_area	*yena;
-			t_area	*wonyoung;
+			t_area	nako;
+			t_area	yena;
+			t_area	wonyoung;
 		};
-		t_area		*izone[SIZE_KIND];
+		t_area		izone[SIZE_KIND];
 	};
 	int				page_size;
 }				t_meta;

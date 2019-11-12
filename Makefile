@@ -77,6 +77,7 @@ SRC_NAME				:=			ft_calloc.c								\
 									ft_free.c								\
 									ft_malloc.c								\
 									ft_realloc.c							\
+									meta.c									\
 									show_alloc_mem.c						\
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(addprefix $(SRC_DIR)/,$(INC_NAME))
@@ -92,7 +93,8 @@ SRC_UTILS_DIR			:=			utils
 
 INC_UTILS_NAME			:=			utils.h									\
 
-SRC_UTILS_NAME			:=			ft_memcpy.c								\
+SRC_UTILS_NAME			:=			find_chunk_by_user_mem.c				\
+									ft_memcpy.c								\
 									ft_memset.c								\
 									round_page_size.c						\
 									size_align.c							\

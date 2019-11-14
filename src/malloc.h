@@ -21,6 +21,6 @@ extern void	*malloc(size_t size);
 extern void	*realloc(void *ptr, size_t size);
 extern void	*reallocf(void *ptr, size_t size);
 extern void	show_alloc_mem(void);
-extern void	show_alloc_mem_hex(void);
+extern void show_alloc_mem_fd(int fd);
 
 #endif

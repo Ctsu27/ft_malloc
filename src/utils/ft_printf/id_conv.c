@@ -20,7 +20,7 @@ int		id_conv(t_pf *buf, va_list *ap)
 			n = nb % 10;
 			if (n < 0)
 				n = -n;
-			str[idx++] = g_str_number[n];
+			str[idx++] = PF_STR_NB_HEX_LWCASE[n];
 			nb /= 10;
 		}
 		while (--idx >= 0)

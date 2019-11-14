@@ -1,7 +1,5 @@
 #include "ft_printf_int.h"
 
-char const			*g_str_number = "0123456789abcdef";
-
 static const _Bool	g_is_convert[256] = \
 {
 	['X'] = 1,

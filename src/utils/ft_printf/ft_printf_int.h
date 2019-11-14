@@ -3,7 +3,8 @@
 
 # include <stddef.h>
 # include <stdarg.h>
-# define PF_BUFF_SIZE 1024
+# define PF_BUFF_SIZE			1024
+# define PF_STR_NB_HEX_LWCASE	"0123456789abcdef"
 
 typedef struct		s_pf
 {
@@ -11,8 +12,6 @@ typedef struct		s_pf
 	char	buf[PF_BUFF_SIZE];
 	int		fd;
 }					t_pf;
-
-extern char const	*g_str_number;
 
 extern int			c_conv(t_pf *buf, va_list *ap);
 extern int			id_conv(t_pf *buf, va_list *ap);

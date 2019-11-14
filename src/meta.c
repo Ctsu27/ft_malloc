@@ -30,16 +30,6 @@ __CONSTRUCTOR			init_meta(void)
 	g_mdata.wonyoung.size_chunk = 0;
 	g_mdata.wonyoung.size = 0;
 	g_mdata.wonyoung.length = 1;
-
-	// ft_dpf(2, "nako.size: %u\n", g_mdata.nako.size);
-	// ft_dpf(2, "nako.size_chunk: %u\n", g_mdata.nako.size_chunk);
-	// ft_dpf(2, "nako.length: %u\n", g_mdata.nako.length);
-	// ft_dpf(2, "yena.size: %u\n", g_mdata.yena.size);
-	// ft_dpf(2, "yena.size_chunk: %u\n", g_mdata.yena.size_chunk);
-	// ft_dpf(2, "nako.length: %u\n", g_mdata.nako.length);
-	// ft_dpf(2, "wonyoung.size_chunk: %u\n", g_mdata.wonyoung.size_chunk);
-	// ft_dpf(2, "wonyoung.size: %u\n", g_mdata.wonyoung.size);
-	// ft_dpf(2, "wonyoung.length: %u\n", g_mdata.wonyoung.length);
 }
 
 static inline void		_delete(t_area *kwon_eunbi)

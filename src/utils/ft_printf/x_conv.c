@@ -16,7 +16,7 @@ int		x_conv(t_pf *buf, va_list *ap)
 		while (nb != 0)
 		{
 			n = nb % 16;
-			str[idx++] = g_str_number[n];
+			str[idx++] = PF_STR_NB_HEX_LWCASE[n];
 			nb /= 16;
 		}
 		while (--idx >= 0)
